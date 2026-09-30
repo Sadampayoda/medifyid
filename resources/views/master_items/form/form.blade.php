@@ -1,4 +1,4 @@
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     @csrf
     @if($method == 'edit')
     <div class="form-group">
@@ -20,6 +20,14 @@
     <div class="form-group">
         <label>Laba (dalam persen)</label>
         <input type="number" class="form-control" name="laba" required  value="{{$item->laba ?? ''}}">
+    </div>
+
+    <div class="form-group">
+        <label for="image">Image</label>
+        <input type="file" class="form-control" name="image" id="image">
+        @if ($item && $item->image)
+            <img src="{{ Storage::url($item->image) }}" alt="Current Image" style="width: 100px; margin-top: 8px;">
+        @endif
     </div>
 
     @php $selected = $item->supplier ?? ''; @endphp
@@ -45,6 +53,21 @@
             <option @if($selected == 'Matkes') selected @endif>Matkes</option>
             <optio @if($selected == 'Umum') selected @endif>Umum</option>
             <optio @if($selected == 'ATK') selected @endif>ATK</option>
+        </select>
+    </div>
+
+    @php
+    $selected = old('categories', (isset($item) && $item->exists) ? $item->categories->pluck('id')->toArray() : []);
+    @endphp
+
+    <div class="form-group mb-3">
+        <label for="categories">Kategori</label>
+        <select class="form-control select2" id="categories" name="categories[]" multiple data-placeholder="-- Pilih Kategori --">
+            @foreach($categories as $category)
+                <option value="{{ $category->id }}" @selected(in_array($category->id, $selected))>
+                    {{ $category->code }} ({{ $category->name }})
+                </option>
+            @endforeach
         </select>
     </div>
 

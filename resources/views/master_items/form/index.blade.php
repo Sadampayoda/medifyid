@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+@section('css')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -24,4 +29,16 @@
 </div>
 @endsection
 @section('js')
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.select2').select2({
+            theme: 'bootstrap-5',
+            placeholder: '-- Pilih Kategori --',
+            allowClear: true,
+            width: '100%'
+        });
+    });
+</script>
 @endsection

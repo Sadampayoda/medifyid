@@ -2,6 +2,11 @@
 
 namespace App\Providers;
 
+
+use App\Contracts\CategoryItemServiceInterface;
+use App\Contracts\ImageServiceInterface;
+use App\Services\CategoryItemService;
+use App\Services\ImageService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +18,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(
+            ImageServiceInterface::class,
+            ImageService::class
+        );
+
+        $this->app->bind(
+            CategoryItemServiceInterface::class,
+            CategoryItemService::class
+        );
     }
 
     /**
@@ -21,8 +34,5 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
-    {
-        //
-    }
+    public function boot() {}
 }

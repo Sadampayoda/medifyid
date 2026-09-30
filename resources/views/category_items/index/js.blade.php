@@ -1,5 +1,3 @@
-
-
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
@@ -14,6 +12,7 @@
         $('#table').DataTable({
             searching: false,
             order: [[0, 'desc']],
+            columnDefs: [{ targets: -1, orderable: false }],
         });
         getData()
     });
@@ -23,25 +22,21 @@
     })
 
     function getData(){
-        
+
         $('#loading-filter').show();
         var dataTableObj = $('#table').DataTable();
         var filter_kode = $('#filter-kode').val()
         var filter_nama = $('#filter-nama').val()
-        var filter_harga_min = $('#filter-harga-min').val()
-        var filter_harga_max = $('#filter-harga-max').val()
         dataTableObj.clear().draw();
 
         $.ajax({
-            url: '{{url("master-items/search")}}',
+            url: '{{url("category-items/search")}}',
             dataType: 'json',
             tryCount: 0,
             retryLimit: 3,
             data: {
                 kode: filter_kode,
-                nama: filter_nama,
-                hargamin: filter_harga_min,
-                hargamax: filter_harga_max
+                nama: filter_nama
             },
             success: function(results) {
                 var data = results.data
@@ -49,18 +44,29 @@
 
                 $.each(data, function(index, item) {
                     var array_temp = [];
-                    var harga_jual = item.harga_beli + item.harga_beli * item.laba / 100;
-                    harga_jual = Math.round(harga_jual)
-                    var kode = item.kode;
+                    var id = item.id;
 
-                    var html = `<a href="{{url('master-items/view/')}}/` + kode + `" class="btn btn-primary">View</a>`
+                    var baseUrl = `{{ url('category-items') }}`;
+
+                    var html = `
+                        <a href="${baseUrl}/${id}" class="btn btn-primary btn-sm">View</a>
+                        <a href="${baseUrl}/${id}/print" class="btn btn-danger btn-sm" target="_blank">Print PDF</a>
+                        <a href="${baseUrl}/${id}/edit" class="btn btn-info btn-sm">Edit</a>
+                        <form action="${baseUrl}/${id}" method="POST" class="d-inline"
+                              onsubmit="return confirm('Yakin hapus kategori ini?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-warning btn-sm">Delete</button>
+                        </form>
+                    `;
 
                     $.each(item, function(obj_name, obj_value) {
-                        if (obj_name == 'laba') return false;
+                        if(obj_name === 'id'){
+                            return;
+                        }
                         array_temp.push(obj_value)
                     })
-                    array_temp.push(harga_jual)
-                    array_temp.push(item.supplier)
+
                     array_temp.push(html)
 
                     rows.push(array_temp);

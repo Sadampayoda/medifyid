@@ -16,6 +16,7 @@
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @yield('css')
 </head>
 
 <body>
@@ -32,7 +33,12 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
-
+                        <li>
+                            <a class="nav-link" href="{{url('master-items')}}">Master Item</a>
+                        </li>
+                        <li>
+                            <a class="nav-link" href="{{url('category-items')}}">Master Kategori</a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
